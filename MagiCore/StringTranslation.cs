@@ -1,7 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
 using KSP.Localization;
 
 namespace MagiCore
@@ -60,7 +58,7 @@ namespace MagiCore
                 sourceString = newStr;
                 lwrString = sourceString.ToLower();
             }
-         
+
             return sourceString;
         }
 
@@ -81,9 +79,13 @@ namespace MagiCore
             str = ReplaceToken(str, "biome", HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null ? ScienceUtil.GetExperimentBiome(FlightGlobals.ActiveVessel.mainBody, FlightGlobals.ActiveVessel.latitude, FlightGlobals.ActiveVessel.longitude) : "NA");
 
 
+            double ut = 0;
             int[] times = { 0, 0, 0, 0, 0 };
             if (Planetarium.fetch != null)
-                times = Utilities.ConvertUT(Planetarium.GetUniversalTime());
+            {
+                ut = Planetarium.GetUniversalTime();
+                times = Utilities.ConvertUT(ut);
+            }
             str = ReplaceToken(str, "year", times[0].ToString());
             str = ReplaceToken(str, "year0", times[0].ToString("D3"));
             str = ReplaceToken(str, "day", times[1].ToString());
@@ -94,7 +96,7 @@ namespace MagiCore
             str = ReplaceToken(str, "min0", times[3].ToString("D2"));
             str = ReplaceToken(str, "sec", times[4].ToString());
             str = ReplaceToken(str, "sec0", times[4].ToString("D2"));
-
+            str = ReplaceToken(str, "kspDate", KSPUtil.PrintDate(ut, false).Trim());
 
             string time = KSPUtil.PrintTimeCompact(0, false);
             if (HighLogic.LoadedSceneIsFlight && FlightGlobals.ActiveVessel != null)
